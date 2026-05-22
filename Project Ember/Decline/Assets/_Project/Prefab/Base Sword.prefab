@@ -1,0 +1,183 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6399687669365073881
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7137029266197406044}
+  - component: {fileID: 709810936297697924}
+  - component: {fileID: 1590355633856831002}
+  - component: {fileID: 1803585032556625086}
+  m_Layer: 0
+  m_Name: Base Sword
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7137029266197406044
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6399687669365073881}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.68886846, y: -0.014104402, z: 0.019923456, w: -0.72447526}
+  m_LocalPosition: {x: 0.002, y: 0.063, z: 0.047}
+  m_LocalScale: {x: 0.39592132, y: 0.39592132, z: 0.39592132}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6054397763841668709}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 87.076, y: -7.902, z: -10.661}
+--- !u!33 &709810936297697924
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6399687669365073881}
+  m_Mesh: {fileID: -1071534875512792498, guid: 5c7bd991fd4397044af366a3902725b7, type: 3}
+--- !u!23 &1590355633856831002
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6399687669365073881}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 600ac96a2c08c3a44a22e85c00f464b6, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &1803585032556625086
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6399687669365073881}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -1071534875512792498, guid: 5c7bd991fd4397044af366a3902725b7, type: 3}
+--- !u!1001 &6405095821153645970
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7137029266197406044}
+    m_Modifications:
+    - target: {fileID: 929696484952114167, guid: b6e6b864525f9994e8572079ba7c2205,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.010522127
+      objectReference: {fileID: 0}
+    - target: {fileID: 929696484952114167, guid: b6e6b864525f9994e8572079ba7c2205,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 929696484952114167, guid: b6e6b864525f9994e8572079ba7c2205,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.0023728888
+      objectReference: {fileID: 0}
+    - target: {fileID: 929696484952114167, guid: b6e6b864525f9994e8572079ba7c2205,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 929696484952114167, guid: b6e6b864525f9994e8572079ba7c2205,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 929696484952114167, guid: b6e6b864525f9994e8572079ba7c2205,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 929696484952114167, guid: b6e6b864525f9994e8572079ba7c2205,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 929696484952114167, guid: b6e6b864525f9994e8572079ba7c2205,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 929696484952114167, guid: b6e6b864525f9994e8572079ba7c2205,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 929696484952114167, guid: b6e6b864525f9994e8572079ba7c2205,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1504896504807881786, guid: b6e6b864525f9994e8572079ba7c2205,
+        type: 3}
+      propertyPath: m_Name
+      value: BladeSimple
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b6e6b864525f9994e8572079ba7c2205, type: 3}
+--- !u!4 &6054397763841668709 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 929696484952114167, guid: b6e6b864525f9994e8572079ba7c2205,
+    type: 3}
+  m_PrefabInstance: {fileID: 6405095821153645970}
+  m_PrefabAsset: {fileID: 0}
