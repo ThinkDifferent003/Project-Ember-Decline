@@ -16,6 +16,7 @@ public class PlayerLeveling : MonoBehaviour
     public float CurrentXp => _currentXp;
     public float XpRequested => _xpRequestedCurve.Evaluate(_currentLevel);
     public float AttackMultiplier => _playerData != null ? _playerData.GetAttackMultiplier(_currentLevel) : 1f;
+    public float CurrentDefense => _playerData != null ? _playerData.GetDefense(_currentLevel) : 0f;
 
     private void Start()
     {
@@ -52,6 +53,7 @@ public class PlayerLeveling : MonoBehaviour
         Debug.Log($"=== REQUISITI PLAYER (LIV. {_currentLevel}) ===\n" +
                   $"- HP Massimi attuali: {hpMaxAttuali}\n" +
                   $"- Moltiplicatore Attacco: {AttackMultiplier}x\n" +
+                  $"- Difesa Attuale: {CurrentDefense}\n" +
                   $"- XP Correnti: {_currentXp} / {XpRequested} (per il prossimo livello)");
     }
     public void AddXp(float xp)

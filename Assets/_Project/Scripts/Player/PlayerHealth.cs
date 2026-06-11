@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,7 +32,15 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage(float damage)
     {
         if (_isDead) return;
-        _currentHealth -= damage;
+        float finalDmg = damage;
+        PlayerLeveling playerLeveling = GetComponent<PlayerLeveling>();
+        if (playerLeveling != null)
+        {
+            finalDmg = damage - playerLeveling.CurrentDefense;
+            if (finalDmg < 1f) finalDmg = 1f;
+            Debug.Log($"🛡️ Player colpito! Danno Nemico: {damage} | Difesa Player: {playerLeveling.CurrentDefense} -> Danno Effettivo Subito: {finalDmg}");
+        }
+        _currentHealth -= finalDmg;
         Debug.Log("Salute attuale dopo il danno: " + _currentHealth);
         if (_currentHealth <= 0) Die();
         else HurtEffects();

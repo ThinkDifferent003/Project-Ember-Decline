@@ -48,7 +48,7 @@ public class WeaponCollision : MonoBehaviour
                 finalDmg = _damage * _playerLeveling.AttackMultiplier;
                 Debug.Log($"⚔️ Player attacca! Danno Base: {_damage} x Moltiplicatore ({_playerLeveling.AttackMultiplier}x) = Danno Finale: {finalDmg}");
             }
-            enemy.TakeDamage(_damage, hitDir, _knockbackForce);
+            enemy.TakeDamage(finalDmg, hitDir, _knockbackForce);
             _canDealDamage = false;
         }
     }
@@ -61,7 +61,15 @@ public class WeaponCollision : MonoBehaviour
             Debug.Log("WeaponCollision: Ho trovato PlayerHealth, infliggo danno!");
         if (player != null)
         {
-            player.TakeDamage(_damage);
+            float finalDmg = _damage;
+            EnemyHealth enemy= transform.root.GetComponent<EnemyHealth>();
+            if (enemy != null)
+            {
+                finalDmg = _damage * enemy.DamageMultiplier;
+                Debug.Log($"⚔️ Nemico attacca! Danno Base Arma: {_damage} x Moltiplicatore Nemico ({enemy.DamageMultiplier}x) = Danno Finale al Player: {finalDmg}");
+            }
+            else Debug.Log($"WeaponCollision: Attacco subito dal Player, ma non ho trovato EnemyHealth su {transform.root.name}. Applico danno base.");
+            player.TakeDamage(finalDmg);
             _canDealDamage = false;
         }
     }

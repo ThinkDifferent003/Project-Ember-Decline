@@ -10,10 +10,12 @@ public class EnemyData : ScriptableObject
     [SerializeField] private string _enemyName;
     [SerializeField] private EnemyBehavior _personality;
     [Header("Health & Resistance")]
-    [SerializeField] private float _maxHealth = 100f;
+    [SerializeField] private AnimationCurve _healthCurve;
+    [SerializeField] private AnimationCurve _defenseCurve;
     [SerializeField] private float _maxStamina = 100f;
     [SerializeField] private float _fireDamageMultiplier = 1;
     [Header("Attack Settings")]
+    [SerializeField] private AnimationCurve _dmgMultiplierCurve;
     [SerializeField] private float _attackRange = 1.5f;
     [SerializeField] private float _attackCooldown = 1f;
     [Header("Movement")]
@@ -31,7 +33,7 @@ public class EnemyData : ScriptableObject
 
     #region - Public Proprierties -
     public string EnemyName => _enemyName;
-    public float MaxHealth => _maxHealth;
+    public float GetMaxHealth(int level) => _healthCurve.Evaluate(level);
     public float MoveSpeed => _moveSpeed;
     public float FireDamageMultiplier => _fireDamageMultiplier;
     public float VisualRange => _visualRange;
@@ -45,5 +47,7 @@ public class EnemyData : ScriptableObject
     public float StaminaCostRate => _staminaCostRate;
     public float StaminaRegenRate => _staminaRegenRate;
     public float BaseXpReward => _baseXpReward;
+    public float GetDamageMultiplier(int level) => _dmgMultiplierCurve.Evaluate(level); 
+    public float GetDefense(int level) => _defenseCurve.Evaluate(level);
     #endregion
 }

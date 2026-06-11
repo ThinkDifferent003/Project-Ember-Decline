@@ -107,7 +107,7 @@ public abstract class EnemyAI : MonoBehaviour
     #region - Weapon Logic - 
     protected void SetEquippedState(bool isEquipped)
     {
-        Debug.Log($"Impostazione spada a: {isEquipped} per {gameObject.name}");
+        //Debug.Log($"Impostazione spada a: {isEquipped} per {gameObject.name}");
         _hasEquippedSword = isEquipped;
         _weaponObj?.SetActive(isEquipped);
         _enemyAnim?.SetEquippedState(isEquipped);
