@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61331d36915ff46438e3c5d07b68ee79, type: 3}
+  m_Name: Barbaric
+  m_EditorClassIdentifier: 
+  _enemyName: Barbaric
+  _personality: 2
+  _maxHealth: 100
+  _maxStamina: 40
+  _fireDamageMultiplier: 2
+  _attackRange: 1.5
+  _attackCooldown: 2
+  _moveSpeed: 3
+  _visualRange: 4
+  _dashSpeed: 15
+  _dashDuration: 0.2
+  _dashCooldown: 3
+  _staminaCostRate: 20
+  _staminaRegenRate: 20
