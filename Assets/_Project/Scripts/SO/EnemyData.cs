@@ -26,6 +26,8 @@ public class EnemyData : ScriptableObject
     [Header("Stamina Settings")]
     [SerializeField] private float _staminaCostRate = 20f;
     [SerializeField] private float _staminaRegenRate = 10f;
+    [Header("Reward Settings")]
+    [SerializeField] private float _baseXpReward = 15f;
 
     #region - Public Proprierties -
     public string EnemyName => _enemyName;
@@ -42,5 +44,6 @@ public class EnemyData : ScriptableObject
     public float MaxStamina => _maxStamina;
     public float StaminaCostRate => _staminaCostRate;
     public float StaminaRegenRate => _staminaRegenRate;
+    public float BaseXpReward => _baseXpReward;
     #endregion
 }

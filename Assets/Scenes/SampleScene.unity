@@ -6442,6 +6442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stats: {fileID: 11400000, guid: 411a57dc53b9d1042a73cc39b7dff2d3, type: 2}
+  _enemyLevel: 1
 --- !u!114 &640213130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6709,6 +6710,44 @@ MonoBehaviour:
   _normalFOV: 40
   _lockSensitivity: 1
   CurrentTarget: {fileID: 0}
+--- !u!114 &703415668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703415654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee545def656461b4dae3e58bd13b6a37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _xpRequestedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 1
+      value: 100
+      inSlope: 100
+      outSlope: 100
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 30
+      value: 3000
+      inSlope: 100
+      outSlope: 100
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _currentLevel: 1
+  _maxLevel: 30
 --- !u!4 &734966782 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1881104661487034149, guid: f2dfa853272277b44a780d6fff3a9b4a,
@@ -6781,7 +6820,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 052a3f7c8557c0748868b7ae695c0868,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 052a3f7c8557c0748868b7ae695c0868,
         type: 3}
@@ -8073,6 +8112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stats: {fileID: 11400000, guid: 411a57dc53b9d1042a73cc39b7dff2d3, type: 2}
+  _enemyLevel: 1
 --- !u!1 &995731775
 GameObject:
   m_ObjectHideFlags: 3
@@ -8697,6 +8737,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stats: {fileID: 11400000, guid: 7d1bddcbac0846546bac4bb2951248c1, type: 2}
+  _enemyLevel: 1
 --- !u!114 &1518718945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9040,6 +9081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stats: {fileID: 11400000, guid: 411a57dc53b9d1042a73cc39b7dff2d3, type: 2}
+  _enemyLevel: 3
 --- !u!54 &1812703470
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9448,6 +9490,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 703415667}
+    - targetCorrespondingSourceObject: {fileID: 6990860148145925469, guid: 6e65ffe5445abed4384dd10ffc3ac0ea,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 703415668}
   m_SourcePrefab: {fileID: 100100000, guid: 6e65ffe5445abed4384dd10ffc3ac0ea, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

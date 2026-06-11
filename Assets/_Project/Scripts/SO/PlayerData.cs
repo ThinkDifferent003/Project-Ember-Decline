@@ -14,6 +14,7 @@ public class PlayerData : ScriptableObject
     [Header("Energy Settings")]
     [SerializeField] private AnimationCurve _energyCurve;
     [SerializeField] private float _energyRegenRate = 5f;
+    [SerializeField] private AnimationCurve _attackMultiplierCurve;
 
     #region - Public Proprierties -
     public float GetMaxHealth(int level) => _healthCurve.Evaluate(level);
@@ -21,5 +22,6 @@ public class PlayerData : ScriptableObject
     public float DashSpeed => _dashSpeed;
     public float GetMaxEnergy(int level) => _energyCurve.Evaluate(level);
     public float EneryRegenRate => _energyRegenRate;
+    public float GetAttackMultiplier(int level) => _attackMultiplierCurve.Evaluate(level);
     #endregion
 }

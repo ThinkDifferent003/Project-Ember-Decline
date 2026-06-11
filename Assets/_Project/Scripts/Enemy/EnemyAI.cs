@@ -52,7 +52,7 @@ public abstract class EnemyAI : MonoBehaviour
         if (_enemyHealth != null && _enemyHealth.IsStunned) return;
         _colldownTimer -= Time.deltaTime;
         PerformLogic();
-        Debug.Log($"Stamina: {_currentStamina} | IsExhausted: {_isExhausted}");
+        //Debug.Log($"Stamina: {_currentStamina} | IsExhausted: {_isExhausted}");
     }
     #endregion
     #region - Cambat Logic -
@@ -130,6 +130,7 @@ public abstract class EnemyAI : MonoBehaviour
     public void Inizialize(EnemyData data)
     {
         _enemyData = data;
+        if (_enemyData != null) _currentStamina = _enemyData.MaxStamina;
         if (_weaponObj != null && _weaponData != null)
         {
             WeaponCollision weaponCol = _weaponObj.GetComponentInChildren<WeaponCollision>(true);

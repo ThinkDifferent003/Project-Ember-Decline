@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +7,8 @@ public class WeaponCollision : MonoBehaviour
     private float _damage;
     private float _knockbackForce;
     private bool _canDealDamage = false;
-   
+
+    private PlayerLeveling _playerLeveling;
     private Collider _weapon;
     private TrailRenderer _trail;
 
@@ -16,6 +17,7 @@ public class WeaponCollision : MonoBehaviour
     {
         _weapon = GetComponent<Collider>();
         _trail = GetComponentInChildren<TrailRenderer>();
+        _playerLeveling = transform.root.GetComponent<PlayerLeveling>();
         EnableDamage(0);
     }
     #endregion
@@ -40,6 +42,12 @@ public class WeaponCollision : MonoBehaviour
         EnemyHealth enemy = other.GetComponent<EnemyHealth>() ?? other.GetComponent<EnemyHealth>();
         if (enemy != null)
         {
+            float finalDmg = _damage;
+            if (_playerLeveling != null)
+            {
+                finalDmg = _damage * _playerLeveling.AttackMultiplier;
+                Debug.Log($"⚔️ Player attacca! Danno Base: {_damage} x Moltiplicatore ({_playerLeveling.AttackMultiplier}x) = Danno Finale: {finalDmg}");
+            }
             enemy.TakeDamage(_damage, hitDir, _knockbackForce);
             _canDealDamage = false;
         }

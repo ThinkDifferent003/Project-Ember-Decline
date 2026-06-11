@@ -9,6 +9,7 @@ public class EnemyHealth : MonoBehaviour , IBurnable
     private EnemyVisuals _enemyVisuals;
     private Coroutine _slowCoroutine;
     private Coroutine _stunCoroutine;
+    private int _enemyLevel = 1;
 
     private float _currentHealth;  
     private bool _isDead; 
@@ -18,6 +19,7 @@ public class EnemyHealth : MonoBehaviour , IBurnable
     public float SpeedMultiplier { get; private set; } = 1f;
     public bool IsDead => _isDead;
     public bool IsStunned => _isStunned;
+    public int EnemyLevel => _enemyLevel;
     #endregion
 
     #region - Lyfe Cycle -
@@ -39,7 +41,7 @@ public class EnemyHealth : MonoBehaviour , IBurnable
             Debug.Log($"🛡️ Scudo ATTIVO! Danno originale: {damage} -> Danno ridotto: {finalDmg}");
         }
         else Debug.Log($"💥 Scudo INATTIVO. Danno pieno: {finalDmg}");
-        _currentHealth -= damage;
+        _currentHealth -= finalDmg;
         Debug.Log($"Colpito! Vita rimanente di {gameObject.name}: {_currentHealth}");
         if (_currentHealth <= 0)
         {
@@ -73,6 +75,20 @@ public class EnemyHealth : MonoBehaviour , IBurnable
     private void Die()
     {
         _isDead = true;
+        if (_enemyData != null)
+        {
+            float xp = _enemyData.BaseXpReward * (1f + (_enemyLevel - 1) * 0.5f);
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                PlayerLeveling playerLeveling = player.GetComponent<PlayerLeveling>();
+                if (playerLeveling != null)
+                {
+                    playerLeveling.AddXp(xp);
+                    Debug.Log($"✨ Sconfitto {_enemyData.EnemyName} (Liv. {_enemyLevel}). Assegnati {xp} XP!");
+                }
+            }
+        }
         Destroy(gameObject);
     }
     public void ApplySlow (float multiplier,float duration)
@@ -101,10 +117,13 @@ public class EnemyHealth : MonoBehaviour , IBurnable
     }
     #endregion
     #region - Utility -
-    public void Inizialize(EnemyData data)
+    public void Inizialize(EnemyData data , int level)
     {
         _enemyData = data;
-        _currentHealth = _enemyData.MaxHealth;
+        _enemyLevel = level;
+        float maxHealthScale = _enemyData.MaxHealth * (1f + (_enemyLevel - 1) * 0.2f);
+        _currentHealth = maxHealthScale;
+        Debug.Log($"{gameObject.name} Inizializzato al Livello {_enemyLevel}. HP Massimi: {_currentHealth}");
     }
     #endregion
 }
