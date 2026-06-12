@@ -9,6 +9,9 @@ public class PlayerData : ScriptableObject
     [Header("Health Settings")]
     [SerializeField] private AnimationCurve _healthCurve;
     [SerializeField] private AnimationCurve _defenseCurve;
+    [Header("Stamina Settings")]
+    [SerializeField] private AnimationCurve _staminaCurve;
+    [SerializeField] private float _staminaRegenRate = 5f;
     [Header("Movement Setiings")]
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _dashSpeed = 10f;
@@ -25,5 +28,7 @@ public class PlayerData : ScriptableObject
     public float EneryRegenRate => _energyRegenRate;
     public float GetAttackMultiplier(int level) => _attackMultiplierCurve.Evaluate(level);
     public float GetDefense(int level) => _defenseCurve.Evaluate(level);
+    public float GetStamina(int level) => _staminaCurve.Evaluate(level);
+    public float StaminaRegenRate => _staminaRegenRate;
     #endregion
 }

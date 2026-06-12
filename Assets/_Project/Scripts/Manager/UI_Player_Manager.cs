@@ -8,9 +8,12 @@ public class UI_Player_Manager : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] private Image _healthBarFill;
     [SerializeField] private Image _energyBarFill;
+    [SerializeField] private Image _staminaBarFill;
 
     private PlayerData _playerData;
     private PlayerHealth _playerHealth;
+    private PlayerEnergy _playerEnergy;
+    private PlayerStamina _playerStamina;
 
 
     #region - Lyfe Cycle -
@@ -22,6 +25,7 @@ public class UI_Player_Manager : MonoBehaviour
     {
         UpdateHealthBar();
         UpdateEnergybar();    
+        UpdateStaminaBar();
     }
     #endregion
     #region - Core Logic -
@@ -33,6 +37,8 @@ public class UI_Player_Manager : MonoBehaviour
             PlayerSetup setup = playerObj.GetComponent<PlayerSetup>();
             if (setup != null) _playerData = setup.PlayerData;
             _playerHealth = playerObj.GetComponent<PlayerHealth>();
+            _playerEnergy = playerObj.GetComponent<PlayerEnergy>();
+            _playerStamina = playerObj.GetComponent<PlayerStamina>();
         }
     }
     private void UpdateHealthBar()
@@ -49,6 +55,26 @@ public class UI_Player_Manager : MonoBehaviour
     private void UpdateEnergybar()
     {
         if (_energyBarFill == null || _playerData == null) return;
+        float maxEnergy = _playerEnergy.MaxEnergy;
+        if (maxEnergy > 0)
+        {
+            float energyRatio = _playerEnergy.CurrentEnergy / maxEnergy;
+            _energyBarFill.fillAmount = Mathf.Clamp01(energyRatio);
+        }
+    }
+    private void UpdateStaminaBar()
+    {
+        if (_playerStamina == null)
+        {
+            FindPlayerReferences();
+        }
+        if (_staminaBarFill == null) return;
+        float maxStamina = _playerStamina.MaxStamina;
+        if (maxStamina > 0)
+        {
+            float staminaRatio = _playerStamina.CurrentStamina / maxStamina;
+            _staminaBarFill.fillAmount = Mathf.Clamp01(staminaRatio);
+        }
     }
     #endregion
 }

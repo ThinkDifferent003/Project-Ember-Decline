@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
@@ -11,8 +12,10 @@ public class PlayerCombat : MonoBehaviour
     private GameObject _spawnedWeapon;
     private PlayerAnimation _playerAnim;
     private WeaponCollision _weaponColl;
+    private PlayerStamina _playerStamina;
 
     private bool _bufferNextAttack;
+    private float _staminaCost;
     private int _comboCount;
     private Coroutine _comboCoroutine;
 
@@ -25,6 +28,7 @@ public class PlayerCombat : MonoBehaviour
     private void Start()
     {
         _playerAnim = GetComponent<PlayerAnimation>();
+        _playerStamina = GetComponent<PlayerStamina>();
     }
     private void Update()
     {
@@ -36,7 +40,8 @@ public class PlayerCombat : MonoBehaviour
     private void TryAttack()
     {
         if (!_playerAnim.CanAttack()) return;
-        if (!_isWeaponEquipped) 
+        if (_currentWeaponData != null) _staminaCost = _currentWeaponData.StaminaCost;
+        if (!_isWeaponEquipped)
         {
             StartCoroutine(EquipAndAttack());
             return;
@@ -44,12 +49,16 @@ public class PlayerCombat : MonoBehaviour
         if (_playerAnim.IsAttacking && _comboCount == 0) _playerAnim.ResetAttack();
         if (!_playerAnim.IsAttacking)
         {
+            if (_playerStamina != null && !_playerStamina.TryConsumeStamina(_staminaCost)) return;
             _comboCount = 1;
             _playerAnim.TriggerAttack(_comboCount);
             if (_comboCoroutine != null) StopCoroutine(_comboCoroutine);
             _comboCoroutine = StartCoroutine(ComboRoutine());
         }
-        else _bufferNextAttack = true;
+        else
+        {
+            if (_playerStamina != null && _playerStamina.CurrentStamina >= _staminaCost) _bufferNextAttack = true;
+        }
     }
     private void ToggleWeapon()
     {
@@ -109,6 +118,11 @@ public class PlayerCombat : MonoBehaviour
             elapsed += Time.deltaTime;
             if (elapsed >=  windowStart && _bufferNextAttack)
             {
+                if (_playerStamina != null && !_playerStamina.TryConsumeStamina(_staminaCost))
+                {
+                    _bufferNextAttack = false;
+                    yield break;
+                }
                 _bufferNextAttack = false;
                 _comboCount++;
                 _playerAnim.TriggerAttack(_comboCount);

@@ -18,3 +18,4 @@ MonoBehaviour:
   _weaponOverride: {fileID: 22100000, guid: 8e7f7d3400815e944a73e9cd18b2b549, type: 2}
   _damage: 10
   _knockbackForce: 1
+  _staminaCost: 15

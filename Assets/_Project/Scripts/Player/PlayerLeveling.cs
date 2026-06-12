@@ -10,6 +10,8 @@ public class PlayerLeveling : MonoBehaviour
     [SerializeField] private int _maxLevel = 30;
     private float _currentXp = 0f;
     private PlayerHealth _playerHealth;
+    private PlayerEnergy _playerEnergy;
+    private PlayerStamina _playerStamina;
     private PlayerData _playerData;
 
     public int CurrentLevel => _currentLevel;
@@ -21,6 +23,8 @@ public class PlayerLeveling : MonoBehaviour
     private void Start()
     {
         _playerHealth = GetComponent<PlayerHealth>();
+        _playerEnergy = GetComponent<PlayerEnergy>();
+        _playerStamina = GetComponent<PlayerStamina>();
         PlayerSetup setup = GetComponent<PlayerSetup>();
         if (setup != null) _playerData = setup.PlayerData;
         if (_playerHealth != null) _playerHealth.UpdateHealthOnLevelUp(_currentLevel);
@@ -43,6 +47,8 @@ public class PlayerLeveling : MonoBehaviour
     {
         _currentLevel++;
         if (_playerHealth != null) _playerHealth.UpdateHealthOnLevelUp(_currentLevel);
+        if (_playerEnergy != null) _playerEnergy.UpdateEnergyStats();
+        if (_playerStamina != null) _playerStamina.UpdateStaminaStats();
         Debug.LogWarning($"⭐ LEVEL UP! Sei passato al Livello {_currentLevel}! ⭐");
         PrintStats();
     }

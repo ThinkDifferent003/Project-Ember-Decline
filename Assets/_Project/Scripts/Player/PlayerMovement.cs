@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _dashDuration = 0.2f;
     [SerializeField] private float _dashCooldown = 1f;
     [SerializeField] private float _fallBackDash = 10f;
+    [SerializeField] private float _dashCost = 20f;
     [Header("Components")]
     [SerializeField] private PlayerLockOn _lockOn;
     private CharacterController _controller;
@@ -18,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     private PowersManager _powersManager;
     private PlayerHealth _playerHealth;
     private PlayerData _playerData;
+    private PlayerStamina _playerStamina;
 
     private Vector3 _moveInput;
     private Vector3 _moveVelocity;
@@ -35,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _powersManager = GetComponent<PowersManager>();
         _playerHealth = GetComponent<PlayerHealth>();
+        _playerStamina = GetComponent<PlayerStamina>();
         if (Camera.main != null) _camTransform = Camera.main.transform;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -117,7 +120,10 @@ public class PlayerMovement : MonoBehaviour
             
         else _moveVelocity = Vector3.zero;
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && _dashCooldownTimer <= 0 && _moveInput.magnitude > 0.1f && !isAnyPowerActive) StartDash();  
+        if (Input.GetKeyDown(KeyCode.LeftShift) && _dashCooldownTimer <= 0 && _moveInput.magnitude > 0.1f && !isAnyPowerActive)
+        {
+            if (_playerStamina != null && _playerStamina.TryConsumeStamina(_dashCost)) StartDash();
+        }  
     }
     #endregion
     #region - Dash Logic _
@@ -128,6 +134,7 @@ public class PlayerMovement : MonoBehaviour
         _dashCooldownTimer = _dashCooldown;
         _dashDirection = _moveInput;
         _verticalVelocity = 0f;
+        if (_playerStamina != null) _playerStamina.SetRegenerationBlocked(true);
     }
     private void UpdateDash()
     {
@@ -137,7 +144,11 @@ public class PlayerMovement : MonoBehaviour
             _controller.Move(_dashDirection * currentSpeed * Time.deltaTime);
             _dashTimeLeft -= Time.deltaTime;
         }
-        else _isDashing = false;     
+        else
+        {
+            _isDashing = false;
+            if (_playerStamina != null) _playerStamina.SetRegenerationBlocked(false);
+        }     
     }
     #endregion
     #region _ Utility _
@@ -148,6 +159,7 @@ public class PlayerMovement : MonoBehaviour
     private void ApplyStunMovement()
     {
         _isDashing = false;
+        if (_playerStamina != null) _playerStamina.SetRegenerationBlocked(false);
         _moveInput = Vector3.zero;
         _moveVelocity = Vector3.zero;
         _moveVelocity.y = _verticalVelocity;

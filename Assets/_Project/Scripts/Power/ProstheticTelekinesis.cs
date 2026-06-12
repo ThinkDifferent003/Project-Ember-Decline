@@ -34,6 +34,11 @@ public class ProstheticTelekinesis : ProstheticPower
     {
         if (_isActive && _grabbedObj != null)
         {
+            if (_playerEnergy != null && _playerEnergy.CurrentEnergy <= 0f)
+            {
+                Release();
+                return;
+            }
             UpdateLineRenderer();
             HandleInput();
         }
@@ -71,7 +76,7 @@ public class ProstheticTelekinesis : ProstheticPower
     #region - Actions -
     private void TryGrab()
     {
-        if (IsAnyOtherPowerActive()) return;
+        if (!CanActivatePower()) return;
         Vector3 origin = _armSource.position;
         Vector3 dir = _playerMovement.transform.forward;
         RaycastHit hit;
@@ -89,7 +94,7 @@ public class ProstheticTelekinesis : ProstheticPower
                 _grabbedObj.useGravity = false;
                 Vector3 liftPos = _grabbedObj.position + Vector3.up * _liftHeight;
                 _relativeOffset = _playerMovement.transform.InverseTransformPoint(liftPos);
-                _isActive = true;
+                IsActive = true;
                 SetAnimation(true);
             }
             else if (rb != null)
@@ -99,7 +104,7 @@ public class ProstheticTelekinesis : ProstheticPower
                 _grabbedObj.useGravity = false;
                 Vector3 liftPos = _grabbedObj.position + Vector3.up * _liftHeight;
                 _relativeOffset = _playerMovement.transform.InverseTransformPoint(liftPos);
-                _isActive = true;
+                IsActive = true;
                 SetAnimation(true);
             }
         }
@@ -108,12 +113,14 @@ public class ProstheticTelekinesis : ProstheticPower
     {
         if (_grabbedObj != null)
         {
+            var ai = _grabbedObj.GetComponent<EnemyAI>();
+            if (ai != null) ai.enabled = true;
             _grabbedObj.isKinematic = false;
             _grabbedObj.useGravity = true;
             _grabbedObj.velocity = Vector3.zero;
             _grabbedObj = null;
         }
-        _isActive = false;
+        IsActive = false;
         _isStabilized = false;
         if (_lineRenderer != null) _lineRenderer.enabled = false;
         SetAnimation(false);
@@ -128,7 +135,7 @@ public class ProstheticTelekinesis : ProstheticPower
         var ai = _grabbedObj.GetComponent<EnemyAI>();
         if (ai != null) ai.enabled = true;
         _grabbedObj = null;
-        _isActive = false;
+        IsActive = false;
         _isStabilized = false;
         if (_lineRenderer != null) _lineRenderer.enabled = false;
         SetAnimation(false);    

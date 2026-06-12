@@ -13,11 +13,13 @@ public class WeaponData : ScriptableObject
     [Header("Combat Stats")]
     [SerializeField] private float _damage;
     [SerializeField] private float _knockbackForce;
+    [SerializeField] private float _staminaCost;
 
     #region - Public Proprierties
     public GameObject WeaponPrefab => _weaponPrefab;
     public AnimatorOverrideController WeaponOverride => _weaponOverride;
     public float Damage => _damage;
     public float KnockbackForce => _knockbackForce;
+    public float StaminaCost => _staminaCost;   
     #endregion
 }

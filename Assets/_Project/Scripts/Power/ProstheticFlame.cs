@@ -5,7 +5,7 @@ using UnityEngine;
 public class ProstheticFlame : ProstheticPower
 {
     [Header("Settings")]
-    [SerializeField] private float _damagePerSecond = 0f;
+    [SerializeField] private float _damagePerSecond = 5f;
     [Header("Components")]
     [SerializeField] private ParticleSystem _flameParticles;
     private Collider _coll;
@@ -17,12 +17,23 @@ public class ProstheticFlame : ProstheticPower
         _coll = GetComponent<Collider>();
         ToggleFlame(false);
     }
+    private void Update()
+    {
+        if (_isActive)
+        {
+            if (_playerEnergy != null)
+            {
+                bool haveEnoughEnergy = _playerEnergy.TryConsumeEnergy(_energyCost * Time.deltaTime);
+                if (!haveEnoughEnergy) ToggleFlame(false);
+            }
+        }
+    }
     #endregion
     #region - Core Logic -
     public void ToggleFlame(bool activated)
     {
         if (activated && _isActive) return;
-        if (activated && IsAnyOtherPowerActive()) return; 
+        if (activated && !CanActivatePower()) return; 
         _isActive = activated;
         if (_coll != null) _coll.enabled = _isActive;
         if (_flameParticles != null)
