@@ -18,11 +18,31 @@ public class SaveManager : MonoBehaviour
     {
         LoadGame();
     }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            Debug.Log("[SaveManager] Premuto F5: Avvio salvataggio rapido...");
+            SaveGame();
+        }
+        if (Input.GetKeyDown(KeyCode.F9))
+        {
+            Debug.Log("[SaveManager] Premuto F9: Avvio caricamento rapido...");
+            LoadGame();
+        }
+    }
     public void SaveGame()
     {
         GameSaveData saveData = new GameSaveData();
-        if (InventoryManager.Instance != null) InventoryManager.Instance.PopulateSaveData(saveData);
-        string json = JsonUtility.ToJson(saveData,true);
+        if (InventoryManager.Instance != null)
+        {
+            Debug.Log($"[DEBUG SALVATAGGIO] Oggetti in inventario prima del popolamento: {InventoryManager.Instance.Items.Count}");
+            InventoryManager.Instance.PopulateSaveData(saveData);
+            Debug.Log($"[DEBUG SALVATAGGIO] Oggetti impacchettati nel saveData: {saveData.SavedInventoryItems.Count}");
+        }
+        else Debug.LogError("[DEBUG SALVATAGGIO] Errore: InventoryManager.Instance è NULL!");
+        string json = JsonUtility.ToJson(saveData, true);
+        Debug.Log($"[DEBUG SALVATAGGIO] Stringa JSON generata:\n{json}");
         File.WriteAllText(_savePath, json);
         Debug.Log($"[SaveManager] Gioco salvato con successo in: {_savePath}");
     }

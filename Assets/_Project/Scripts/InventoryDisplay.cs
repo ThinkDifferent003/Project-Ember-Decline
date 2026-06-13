@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryDisplay : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class InventoryDisplay : MonoBehaviour
     [SerializeField] private GameObject _descritionPanel;
     [SerializeField] private TextMeshProUGUI _itemNameText;
     [SerializeField] private TextMeshProUGUI _itemDescriptionText;
+    [SerializeField] private Image _selectedIcon;
     [SerializeField] private GameObject _inventoryPanel;
     [SerializeField] private KeyCode _toggleKey = KeyCode.I;
 
@@ -65,5 +67,11 @@ public class InventoryDisplay : MonoBehaviour
         _descritionPanel.SetActive(true);
         _itemNameText.text = item.ItemName;
         _itemDescriptionText.text = item.Description;
+        if (item.ItemSprite != null)
+        {
+            _selectedIcon.sprite = item.ItemSprite;
+            _selectedIcon.enabled = true;
+        }
+        else _selectedIcon.enabled = false;
     }
 }

@@ -14,6 +14,8 @@ public class InventorySlot : MonoBehaviour
     {
         _currentSlotItem = newItem;
         _itemIcon.sprite = _currentSlotItem.Data.ItemSprite;
+        _itemIcon.enabled = true;
+        _itemIcon.gameObject.SetActive(true);
         if (_currentSlotItem.Data.IsStackable && _currentSlotItem.Count > 1)
         {
             _countText.text = _currentSlotItem.Count.ToString();
