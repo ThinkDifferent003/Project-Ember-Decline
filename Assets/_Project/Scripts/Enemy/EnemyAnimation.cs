@@ -32,4 +32,8 @@ public class EnemyAnimation : MonoBehaviour
         _animator?.ResetTrigger("Hurt");
         _animator?.SetTrigger("Hurt");
     }
+    public void SetShieldState(bool isActive)
+    {
+        _animator?.SetBool("IsShieldActive", isActive);
+    }
 }

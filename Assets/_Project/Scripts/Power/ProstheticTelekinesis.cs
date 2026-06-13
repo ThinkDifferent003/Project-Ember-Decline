@@ -61,11 +61,14 @@ public class ProstheticTelekinesis : ProstheticPower
         Vector3 diff = targetPos - _grabbedObj.transform.position;
         if (!_isStabilized && diff.magnitude < 0.5f) _isStabilized = true;
         if (_isStabilized) RotatePlayerToMouse();
-        if (_grabbedObj.TryGetComponent<EnemyLiftable>(out EnemyLiftable enemy) && _grabbedObj.isKinematic)
+        if (_grabbedObj.isKinematic)
         {
-            _objectWeight = enemy.Weight;
+            if (_grabbedObj.TryGetComponent<EnemyLiftable>(out EnemyLiftable enemy) && _grabbedObj.isKinematic)
+            {
+                _objectWeight = enemy.Weight;
+            }
             _grabbedObj.MovePosition(Vector3.Lerp(_grabbedObj.position, targetPos, Time.fixedDeltaTime * _attractSpeed / _objectWeight));
-        }
+        } 
         else
         {
             _grabbedObj.velocity = (diff * _attractSpeed) / _objectWeight;
@@ -88,7 +91,17 @@ public class ProstheticTelekinesis : ProstheticPower
             {
                 _objectWeight = enemyLift.Weight;
                 var ai = enemyLift.GetComponent<EnemyAI>();
-                if (ai != null) ai.enabled = false;
+                if (ai != null)
+                {
+                    ai.StopAllCoroutines();
+                    ai.enabled = false;
+                }
+                if (enemyLift.TryGetComponent<UnityEngine.AI.NavMeshAgent>(out var agent)) agent.enabled = false;
+                if (enemyLift.TryGetComponent<EnemyDefensive>(out EnemyDefensive enemyDefensive))
+                {
+                    enemyDefensive.StopAllCoroutines();
+                    enemyDefensive.SetTelekinesisDisable(true);
+                }
                 _grabbedObj = rb;
                 _grabbedObj.isKinematic = true;
                 _grabbedObj.useGravity = false;
@@ -115,6 +128,8 @@ public class ProstheticTelekinesis : ProstheticPower
         {
             var ai = _grabbedObj.GetComponent<EnemyAI>();
             if (ai != null) ai.enabled = true;
+            if (_grabbedObj.TryGetComponent<UnityEngine.AI.NavMeshAgent>(out var agent)) agent.enabled = true;
+            if (_grabbedObj.TryGetComponent<EnemyDefensive>(out EnemyDefensive enemyDefensive)) enemyDefensive.SetTelekinesisDisable(false); 
             _grabbedObj.isKinematic = false;
             _grabbedObj.useGravity = true;
             _grabbedObj.velocity = Vector3.zero;
@@ -134,6 +149,8 @@ public class ProstheticTelekinesis : ProstheticPower
         _grabbedObj.AddForce(_playerMovement.transform.forward * _throwForce, ForceMode.Impulse);
         var ai = _grabbedObj.GetComponent<EnemyAI>();
         if (ai != null) ai.enabled = true;
+        if (_grabbedObj.TryGetComponent<UnityEngine.AI.NavMeshAgent>(out var agent)) agent.enabled = true;
+        if (_grabbedObj.TryGetComponent<EnemyDefensive>(out EnemyDefensive enemyDefensive)) enemyDefensive.SetTelekinesisDisable(false);
         _grabbedObj = null;
         IsActive = false;
         _isStabilized = false;
