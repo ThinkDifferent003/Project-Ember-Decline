@@ -15,7 +15,11 @@ public class ItemData : ScriptableObject
     [SerializeField] private bool _isStackable;
 
     public string ItemID => _itemID;
-    public string ItemName => _itemName;
+    public string ItemName
+    {
+        get => _itemName;
+        set => _itemName = value;
+    }
     public string Description => _description;
     public Sprite ItemSprite => _itemSprite;
     public bool IsStackable => _isStackable;

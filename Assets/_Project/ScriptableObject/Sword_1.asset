@@ -12,10 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ba241ff23e0974981789adec2608bd, type: 3}
   m_Name: Sword_1
   m_EditorClassIdentifier: 
-  _weaponName: Base Sword
+  _itemID: Spada_01
+  _itemName: Spada Principale
+  _description: 
+  _itemSprite: {fileID: 0}
+  _itemType: 1
+  _isStackable: 0
   _weaponPrefab: {fileID: 860023577617486121, guid: 643d94a94f6f64e47b2aad15380423be,
     type: 3}
   _weaponOverride: {fileID: 22100000, guid: 8e7f7d3400815e944a73e9cd18b2b549, type: 2}
   _damage: 10
   _knockbackForce: 1
   _staminaCost: 15
+  _level: 0

@@ -7173,8 +7173,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 176b52eff3527e64e8da10e9b37e30ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentWeaponData: {fileID: 11400000, guid: 46bf270cd57bc1040b74edb57021c388, type: 2}
-  _handTransform: {fileID: 343726284}
 --- !u!114 &703415660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7294,6 +7292,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f18eeaab31d1c464abdeeba72dce3cb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &703415679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703415654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1351d1cce60f84cb6f2343ba079667, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _weaponData: {fileID: 11400000, guid: 46bf270cd57bc1040b74edb57021c388, type: 2}
+  _handTransform: {fileID: 343726284}
+  _currentWeapon: {fileID: 0}
 --- !u!4 &734966782 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1881104661487034149, guid: f2dfa853272277b44a780d6fff3a9b4a,
@@ -11923,6 +11936,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 703415674}
+    - targetCorrespondingSourceObject: {fileID: 6990860148145925469, guid: 6e65ffe5445abed4384dd10ffc3ac0ea,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 703415679}
   m_SourcePrefab: {fileID: 100100000, guid: 6e65ffe5445abed4384dd10ffc3ac0ea, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

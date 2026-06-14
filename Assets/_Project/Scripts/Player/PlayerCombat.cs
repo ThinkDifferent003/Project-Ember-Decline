@@ -6,18 +6,21 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour
 {
     [Header("Configuration")]
-    [SerializeField] private WeaponData _currentWeaponData;
-    [SerializeField] private Transform _handTransform;
+    //[SerializeField] private WeaponData _currentWeaponData;
+    //[SerializeField] private Transform _handTransform;
 
-    private GameObject _spawnedWeapon;
+    //private GameObject _spawnedWeapon;
     private PlayerAnimation _playerAnim;
-    private WeaponCollision _weaponColl;
+    //private WeaponCollision _weaponColl;
     private PlayerStamina _playerStamina;
+    private PlayerWeaponHandler _weaponHandler;
 
-    private bool _bufferNextAttack;
+    
     private float _staminaCost;
     private int _comboCount;
-    private Coroutine _comboCoroutine;
+    
+    private bool _comboRegistered;
+    private bool _isComboWindowActive;
 
     private bool _isWeaponEquipped;
     #region - Public Proprierties -
@@ -29,6 +32,7 @@ public class PlayerCombat : MonoBehaviour
     {
         _playerAnim = GetComponent<PlayerAnimation>();
         _playerStamina = GetComponent<PlayerStamina>();
+        _weaponHandler = GetComponent<PlayerWeaponHandler>();
     }
     private void Update()
     {
@@ -40,64 +44,130 @@ public class PlayerCombat : MonoBehaviour
     private void TryAttack()
     {
         if (!_playerAnim.CanAttack()) return;
-        if (_currentWeaponData != null) _staminaCost = _currentWeaponData.StaminaCost;
+        if (_playerAnim == null) return;
+        //if (_currentWeaponData != null) _staminaCost = _currentWeaponData.StaminaCost;
+        WeaponData data = _weaponHandler?.GetWeaponData();
+        if (data != null) _staminaCost = data.StaminaCost;
         if (!_isWeaponEquipped)
         {
             StartCoroutine(EquipAndAttack());
             return;
         }
-        if (_playerAnim.IsAttacking && _comboCount == 0) _playerAnim.ResetAttack();
-        if (!_playerAnim.IsAttacking)
+        Animator anim = _playerAnim.GetComponent<Animator>();
+        if (anim != null)
         {
-            if (_playerStamina != null && !_playerStamina.TryConsumeStamina(_staminaCost)) return;
-            _comboCount = 1;
-            _playerAnim.TriggerAttack(_comboCount);
-            if (_comboCoroutine != null) StopCoroutine(_comboCoroutine);
-            _comboCoroutine = StartCoroutine(ComboRoutine());
+            AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+            if (stateInfo.IsName("Idle_Armed") && _playerAnim.IsAttacking)
+            {
+                Debug.LogWarning("Rilevato disallineamento: l'eroe è in Idle ma lo script era bloccato. Forzo il Reset.");
+                ResetComboSequence();
+            }
         }
-        else
+        if (_playerAnim.IsAttacking)
         {
-            if (_playerStamina != null && _playerStamina.CurrentStamina >= _staminaCost) _bufferNextAttack = true;
+            if (_isComboWindowActive && !_comboRegistered)
+            {
+                if (_playerStamina != null && _playerStamina.CurrentStamina >= _staminaCost)
+                {
+                    _comboRegistered = true;
+                    Debug.Log($"Click registrato nella finestra! Eseguo subito l'attacco {_comboCount + 1}");
+                    ExecuteAttack();
+                    return;
+                }
+            }
+            return;
         }
+        _comboCount = 0;
+        ExecuteAttack();
+    }
+    private void ExecuteAttack()
+    {
+        if (_playerStamina != null && !_playerStamina.TryConsumeStamina(_staminaCost)) return;
+        _comboCount++;
+        if (_comboCount > 2) _comboCount = 1;
+        _comboRegistered = false;
+        _isComboWindowActive = false;
+        if (_playerAnim != null) _playerAnim.TriggerAttack(_comboCount);
+        
+        
     }
     private void ToggleWeapon()
     {
-        if (_currentWeaponData == null) return;
+        //if (_currentWeaponData == null) return;
+        if (_weaponHandler == null || _weaponHandler.GetWeaponData() == null) return;
         _isWeaponEquipped = !_isWeaponEquipped;
-        if (_isWeaponEquipped) EquipWeapon();
-        else UnequipWeapon();
-        _playerAnim?.SetWeaponEquippedState(_isWeaponEquipped, _spawnedWeapon);
+        if (_isWeaponEquipped) _weaponHandler.EquipWeapon(_playerAnim); //EquipWeapon();
+        else _weaponHandler.UnequipWeapon();//UnequipWeapon();
+        _playerAnim?.SetWeaponEquippedState(_isWeaponEquipped, _weaponHandler.GetSpwnedWeapon());//_spawnedWeapon );
     }
     #endregion
     #region - Weapon Management -
-    private void EquipWeapon()
-    {
-        if (_playerAnim != null && _currentWeaponData.WeaponOverride != null)
-            _playerAnim.ApplyWeaponOverride(_currentWeaponData.WeaponOverride);
+    //private void EquipWeapon()
+    //{
+    //    if (_playerAnim != null && _currentWeaponData.WeaponOverride != null)
+    //        _playerAnim.ApplyWeaponOverride(_currentWeaponData.WeaponOverride);
 
-        if (_spawnedWeapon == null && _currentWeaponData.WeaponPrefab != null)
-        {
-            _spawnedWeapon = Instantiate(_currentWeaponData.WeaponPrefab, _handTransform);
-            _spawnedWeapon.transform.localPosition = Vector3.zero;
-            _spawnedWeapon.transform.localRotation = Quaternion.identity;
-            _weaponColl = _spawnedWeapon.GetComponentInChildren<WeaponCollision>();
-            if (_weaponColl != null) _weaponColl.InizializeWeaponData(_currentWeaponData.Damage, _currentWeaponData.KnockbackForce);
-        }
-        else if (_spawnedWeapon != null) _spawnedWeapon.SetActive(true);
-    }
-    private void UnequipWeapon()
-    {
-        if (_spawnedWeapon != null) _spawnedWeapon.SetActive(false);
-    }
+    //    if (_spawnedWeapon == null && _currentWeaponData.WeaponPrefab != null)
+    //    {
+    //        _spawnedWeapon = Instantiate(_currentWeaponData.WeaponPrefab, _handTransform);
+    //        _spawnedWeapon.transform.localPosition = Vector3.zero;
+    //        _spawnedWeapon.transform.localRotation = Quaternion.identity;
+    //        _weaponColl = _spawnedWeapon.GetComponentInChildren<WeaponCollision>();
+    //        if (_weaponColl != null) _weaponColl.InizializeWeaponData(_currentWeaponData.Damage, _currentWeaponData.KnockbackForce);
+    //    }
+    //    else if (_spawnedWeapon != null) _spawnedWeapon.SetActive(true);
+    //}
+    //private void UnequipWeapon()
+    //{
+    //    if (_spawnedWeapon != null) _spawnedWeapon.SetActive(false);
+    //}
     #endregion
     #region - Animation Events -
     public void StartAttackCollision()
     {
-        _weaponColl?.EnableDamage(1);
+        //_weaponColl?.EnableDamage(1);
+        _weaponHandler?.UpdateCollisionDamage();
+        _weaponHandler?.GetWeaponCollision()?.EnableDamage(1);
     }
     public void EndAttackCollision()
     {
-        _weaponColl?.EnableDamage(0);
+        //_weaponColl?.EnableDamage(0);
+        _weaponHandler?.GetWeaponCollision()?.EnableDamage(0);
+    }
+    public void OnComboWindowOpen()
+    {
+        Debug.Log("--- FINESTRA APERTA: PREMI ORA! ---");
+        _isComboWindowActive = true;
+        if (_playerAnim != null)
+        {
+            Animator anim = _playerAnim.GetComponent<Animator>();
+            if (anim != null) anim.SetFloat("AttackSpeed", 0.4f);
+        }
+        CancelInvoke(nameof(OnComboWindowClose));
+        Invoke(nameof(OnComboWindowClose), 5f);
+    }
+    public void OnComboWindowClose()
+    {
+        if(_isComboWindowActive && !_comboRegistered) _isComboWindowActive = false;
+        if (_playerAnim != null)
+        {
+            Animator anim = _playerAnim.GetComponent<Animator>();
+            if (anim != null) anim.SetFloat("AttackSpeed", 1.0f);
+        }
+    }    
+    public void ResetComboSequence()
+    {
+        CancelInvoke(nameof(OnComboWindowClose));
+        _comboCount = 0;
+        _comboRegistered = false;
+        _isComboWindowActive= false;
+        if (_playerAnim != null)
+        {
+            Animator anim = _playerAnim.GetComponent<Animator>();
+            if (anim != null) anim.SetFloat("AttackSpeed", 1.0f);
+            _playerAnim.ResetAttack();
+        }
+        Debug.Log("--- COMBO RESETTATA COMPLETAMENTE ---");
     }
     #endregion
     #region - Coroutines -
@@ -106,30 +176,6 @@ public class PlayerCombat : MonoBehaviour
         ToggleWeapon();
         yield return null;
         TryAttack();
-    }
-    private IEnumerator ComboRoutine()
-    {
-        float windowStart = 0.3f;
-        float windowEnd = 0.9f;
-        float elapsed = 0f;
-        _bufferNextAttack = false;
-        while (elapsed  < windowEnd)
-        {
-            elapsed += Time.deltaTime;
-            if (elapsed >=  windowStart && _bufferNextAttack)
-            {
-                if (_playerStamina != null && !_playerStamina.TryConsumeStamina(_staminaCost))
-                {
-                    _bufferNextAttack = false;
-                    yield break;
-                }
-                _bufferNextAttack = false;
-                _comboCount++;
-                _playerAnim.TriggerAttack(_comboCount);
-                yield break;
-            }
-            yield return null;
-        }
     }
     #endregion
 }

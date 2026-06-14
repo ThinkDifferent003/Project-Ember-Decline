@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Weapon" , menuName = "Weapons")]
-public class WeaponData : ScriptableObject
+public class WeaponData : ItemData
 {
     [Header("Identity")]
-    [SerializeField] private string _weaponName;
+    //[SerializeField] private string _weaponName;
     [Header("Visuals & Animation")]
     [SerializeField] private GameObject _weaponPrefab;
     [SerializeField] private AnimatorOverrideController _weaponOverride;
@@ -14,11 +14,16 @@ public class WeaponData : ScriptableObject
     [SerializeField] private float _damage;
     [SerializeField] private float _knockbackForce;
     [SerializeField] private float _staminaCost;
+    [HideInInspector] public int _level = 0;
 
     #region - Public Proprierties
     public GameObject WeaponPrefab => _weaponPrefab;
     public AnimatorOverrideController WeaponOverride => _weaponOverride;
-    public float Damage => _damage;
+    public float Damage
+    {
+        get => _damage;
+        set => _damage = value;
+    }
     public float KnockbackForce => _knockbackForce;
     public float StaminaCost => _staminaCost;   
     #endregion

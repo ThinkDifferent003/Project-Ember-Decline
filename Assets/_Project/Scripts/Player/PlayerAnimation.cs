@@ -51,6 +51,7 @@ public class PlayerAnimation : MonoBehaviour
     public void TriggerAttack(int comboIndex)
     {
         IsAttacking = true;
+        _animator.ResetTrigger("Attack");
         _animator.SetInteger("ComboIndex", comboIndex);
         _animator?.SetTrigger("Attack");
     }
@@ -62,14 +63,16 @@ public class PlayerAnimation : MonoBehaviour
     {
         if (_animator == null) return false;
         AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+        if (IsAttacking) return true;
         if (stateInfo.IsName("Idle_Unarmed") || stateInfo.IsName("Walking") || stateInfo.IsName("Idle_Armed")) return true;
-        if (stateInfo.IsTag("Attack")) return stateInfo.normalizedTime > 0.2f;
+        //if (stateInfo.IsTag("Attack")) return true; //stateInfo.normalizedTime > 0.2f;
         return false;
     }
     public void ResetAttack()
     {
         IsAttacking = false;
         _animator.SetInteger("ComboIndex", 0);
+        _animator.ResetTrigger("Attack");
     }
     #endregion
     #region - Utility -
