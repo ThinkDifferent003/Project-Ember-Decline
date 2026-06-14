@@ -7,4 +7,8 @@ public class GameSaveData
 {
     [SerializeField] private List<SavedItem> _savedInventoryItems = new List<SavedItem>();
     public List<SavedItem> SavedInventoryItems => _savedInventoryItems;
+
+    public string EquippedWeaponID;
+    public int WeaponLevel;
+    public float WeaponDamage;
 }

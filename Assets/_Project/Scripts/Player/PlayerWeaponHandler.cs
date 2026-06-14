@@ -6,7 +6,7 @@ public class PlayerWeaponHandler : MonoBehaviour
 {
     [SerializeField] private WeaponData _weaponData;
     [SerializeField] private Transform _handTransform;
-    [HideInInspector] public WeaponData _currentWeapon;
+    private WeaponData _currentWeapon;
     private GameObject _spawnedWeapon;
     private WeaponCollision _weaponColl;
     private PlayerLeveling _playerLeveling;
@@ -54,7 +54,21 @@ public class PlayerWeaponHandler : MonoBehaviour
     {
         if (_currentWeapon != null)
         {
-            
+            _currentWeapon.Level++;
+            float oldDmg = _currentWeapon.Damage;
+            _currentWeapon.Damage = oldDmg + increaseDmg;
+            _currentWeapon.ItemName = $"{_weaponData.ItemName} +{_currentWeapon.Level}";
+            UpdateCollisionDamage();
+        }
+    }
+    public void UpdateSavedWeapon(int level,float dmg)
+    {
+        if (_currentWeapon != null)
+        {
+            _currentWeapon.Level = level;
+            _currentWeapon.Damage = dmg;
+            if (_currentWeapon.Level > 0) _currentWeapon.ItemName = $"{_weaponData.ItemName} +{_currentWeapon.Level}";
+            UpdateCollisionDamage();
         }
     }
 }

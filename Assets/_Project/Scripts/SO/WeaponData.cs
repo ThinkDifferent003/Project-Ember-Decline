@@ -14,7 +14,7 @@ public class WeaponData : ItemData
     [SerializeField] private float _damage;
     [SerializeField] private float _knockbackForce;
     [SerializeField] private float _staminaCost;
-    [HideInInspector] public int _level = 0;
+    [SerializeField] private int _level = 0;
 
     #region - Public Proprierties
     public GameObject WeaponPrefab => _weaponPrefab;
@@ -26,5 +26,10 @@ public class WeaponData : ItemData
     }
     public float KnockbackForce => _knockbackForce;
     public float StaminaCost => _staminaCost;   
+    public int Level
+    {
+        get => _level;
+        set => _level = value;
+    }
     #endregion
 }

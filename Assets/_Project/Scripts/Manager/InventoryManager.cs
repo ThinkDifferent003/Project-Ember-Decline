@@ -59,7 +59,11 @@ public class InventoryManager : MonoBehaviour
         foreach (SavedItem savedItem in saveData.SavedInventoryItems)
         {
             ItemData foundItem = _allItemsData.Find(item => item.ItemID == savedItem.ID);
-            if (foundItem != null) _items.Add(new InventoryItem(foundItem, savedItem.Count));
+            if (foundItem != null)
+            {
+                ItemData runtimeItem = ScriptableObject.Instantiate(foundItem);
+                _items.Add(new InventoryItem(foundItem, savedItem.Count));
+            }
             else Debug.LogWarning($"[InventoryManager] Errore: ID '{savedItem.ID}' non trovato nel database durante il caricamento!");
         }
         OnInventoryChanged?.Invoke();

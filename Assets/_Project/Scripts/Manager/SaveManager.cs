@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 public class SaveManager : MonoBehaviour
@@ -41,6 +42,19 @@ public class SaveManager : MonoBehaviour
             Debug.Log($"[DEBUG SALVATAGGIO] Oggetti impacchettati nel saveData: {saveData.SavedInventoryItems.Count}");
         }
         else Debug.LogError("[DEBUG SALVATAGGIO] Errore: InventoryManager.Instance è NULL!");
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            PlayerWeaponHandler weaponHandler = player.GetComponent<PlayerWeaponHandler>();
+            if (weaponHandler != null && weaponHandler.GetWeaponData()) 
+            {
+                WeaponData data = weaponHandler.GetWeaponData();
+                saveData.EquippedWeaponID = data.ItemID;
+                saveData.WeaponLevel = data.Level;
+                saveData.WeaponDamage = data.Damage;
+                Debug.Log($"[SaveManager] Salvati dati arma: {data.ItemName} (+{data.Level})");
+            }
+        }
         string json = JsonUtility.ToJson(saveData, true);
         Debug.Log($"[DEBUG SALVATAGGIO] Stringa JSON generata:\n{json}");
         File.WriteAllText(_savePath, json);
@@ -56,6 +70,13 @@ public class SaveManager : MonoBehaviour
         string json = File.ReadAllText(_savePath);
         GameSaveData saveData = JsonUtility.FromJson<GameSaveData>(json);
         if (InventoryManager.Instance != null) InventoryManager.Instance.LoadFromSaveData(saveData);
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            PlayerWeaponHandler weaponHandler = player.GetComponent<PlayerWeaponHandler>();
+            if (weaponHandler != null) weaponHandler.UpdateSavedWeapon(saveData.WeaponLevel, saveData.WeaponDamage);
+        }
+        if (UI_PlayerStats.Instance != null) UI_PlayerStats.Instance.UpdatePanelStats();
         Debug.Log("[SaveManager] Gioco caricato con successo!");
     }
     private void OnApplicationQuit()

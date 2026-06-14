@@ -29,6 +29,7 @@ public class PlayerLeveling : MonoBehaviour
         if (setup != null) _playerData = setup.PlayerData;
         if (_playerHealth != null) _playerHealth.UpdateHealthOnLevelUp(_currentLevel);
         PrintStats();
+        if (UI_PlayerStats.Instance != null) UI_PlayerStats.Instance.UpdatePanelStats();
     }
     private void Update()
     {
@@ -51,6 +52,7 @@ public class PlayerLeveling : MonoBehaviour
         if (_playerStamina != null) _playerStamina.UpdateStaminaStats();
         Debug.LogWarning($"⭐ LEVEL UP! Sei passato al Livello {_currentLevel}! ⭐");
         PrintStats();
+        if (UI_PlayerStats.Instance != null) UI_PlayerStats.Instance.UpdatePanelStats();
     }
     public void PrintStats()
     {
@@ -67,6 +69,7 @@ public class PlayerLeveling : MonoBehaviour
         if (_currentLevel >= _maxLevel) return;
         _currentXp += xp;
         Debug.Log($"Guadagnati {xp} XP. Totale: {_currentXp}/{XpRequested}");
+        if (UI_PlayerStats.Instance != null) UI_PlayerStats.Instance.UpdatePanelStats();
         while (_currentXp >= XpRequested && _currentLevel < _maxLevel)
         {
             _currentXp -= XpRequested;

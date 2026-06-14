@@ -15,7 +15,7 @@ public class PlayerHealth : MonoBehaviour
     #region - Puplic Proprierties -
     public float CurrentHealth => _currentHealth;
     public bool IsStunned => _isStunned;
-    public float MaxHealth => _playerData.GetMaxHealth(_currentLevel);
+    public float MaxHealth => _playerData != null ? _playerData.GetMaxHealth(_currentLevel) : 100f;
     #endregion
     #region - Life Cycle -
     private void Start()
