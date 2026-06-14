@@ -11,4 +11,6 @@ public class GameSaveData
     public string EquippedWeaponID;
     public int WeaponLevel;
     public float WeaponDamage;
+    public int PlayerLevel;
+    public float PlayerCurrentXp;
 }

@@ -13,6 +13,7 @@ public class PlayerLeveling : MonoBehaviour
     private PlayerEnergy _playerEnergy;
     private PlayerStamina _playerStamina;
     private PlayerData _playerData;
+    public string CharacterName => _playerData != null ? _playerData.PgName : "---";
 
     public int CurrentLevel => _currentLevel;
     public float CurrentXp => _currentXp;
@@ -53,6 +54,7 @@ public class PlayerLeveling : MonoBehaviour
         Debug.LogWarning($"⭐ LEVEL UP! Sei passato al Livello {_currentLevel}! ⭐");
         PrintStats();
         if (UI_PlayerStats.Instance != null) UI_PlayerStats.Instance.UpdatePanelStats();
+        if (SaveManager.Instance != null) SaveManager.Instance.SaveGame();
     }
     public void PrintStats()
     {
@@ -83,6 +85,16 @@ public class PlayerLeveling : MonoBehaviour
             _currentXp = 0f;
             LevelUp();
         }
+    }
+    public void LoadLevelData(int level , float xp)
+    {
+        _currentLevel = level;
+        _currentXp = xp;
+        if (_playerHealth != null) _playerHealth.UpdateHealthOnLevelUp(_currentLevel);
+        if (_playerEnergy != null) _playerEnergy.UpdateEnergyStats();
+        if (_playerStamina != null) _playerStamina.UpdateStaminaStats();
+        PrintStats();
+        if (UI_PlayerStats.Instance != null) UI_PlayerStats.Instance.UpdatePanelStats();
     }
 }
 

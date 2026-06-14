@@ -6,6 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewPlayerData", menuName = "PlayerData")]
 public class PlayerData : ScriptableObject
 {
+    [SerializeField] private string _pgName;
     [Header("Health Settings")]
     [SerializeField] private AnimationCurve _healthCurve;
     [SerializeField] private AnimationCurve _defenseCurve;
@@ -21,6 +22,7 @@ public class PlayerData : ScriptableObject
     [SerializeField] private AnimationCurve _attackMultiplierCurve;
 
     #region - Public Proprierties -
+    public string PgName => _pgName;
     public float GetMaxHealth(int level) => _healthCurve.Evaluate(level);
     public float MoveSpeed => _moveSpeed;
     public float DashSpeed => _dashSpeed;

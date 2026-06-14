@@ -23,4 +23,10 @@ public class ItemData : ScriptableObject
     public string Description => _description;
     public Sprite ItemSprite => _itemSprite;
     public bool IsStackable => _isStackable;
+    public ItemType Type => _itemType;
+
+    public virtual void UseItem()
+    {
+
+    }
 }

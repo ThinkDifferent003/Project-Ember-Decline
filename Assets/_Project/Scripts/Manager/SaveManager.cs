@@ -55,6 +55,12 @@ public class SaveManager : MonoBehaviour
                 Debug.Log($"[SaveManager] Salvati dati arma: {data.ItemName} (+{data.Level})");
             }
         }
+        PlayerLeveling leveling = player.GetComponent<PlayerLeveling>();
+        if (leveling != null)
+        {
+            saveData.PlayerLevel = leveling.CurrentLevel;
+            saveData.PlayerCurrentXp = leveling.CurrentXp;
+        }
         string json = JsonUtility.ToJson(saveData, true);
         Debug.Log($"[DEBUG SALVATAGGIO] Stringa JSON generata:\n{json}");
         File.WriteAllText(_savePath, json);
@@ -75,6 +81,12 @@ public class SaveManager : MonoBehaviour
         {
             PlayerWeaponHandler weaponHandler = player.GetComponent<PlayerWeaponHandler>();
             if (weaponHandler != null) weaponHandler.UpdateSavedWeapon(saveData.WeaponLevel, saveData.WeaponDamage);
+            PlayerLeveling leveling = player.GetComponent<PlayerLeveling>();
+            if (leveling != null)
+            {
+                int levelToLoad = saveData.PlayerLevel > 0 ? saveData.PlayerLevel : 1;
+                leveling.LoadLevelData(levelToLoad, saveData.PlayerCurrentXp);
+            }
         }
         if (UI_PlayerStats.Instance != null) UI_PlayerStats.Instance.UpdatePanelStats();
         Debug.Log("[SaveManager] Gioco caricato con successo!");

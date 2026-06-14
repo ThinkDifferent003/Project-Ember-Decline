@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c2ac7c6409cd6644a1539327a138905, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
+  _pgName: Gatsu
   _healthCurve:
     serializedVersion: 2
     m_Curve:
