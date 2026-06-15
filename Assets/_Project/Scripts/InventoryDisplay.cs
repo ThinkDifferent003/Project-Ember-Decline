@@ -16,6 +16,9 @@ public class InventoryDisplay : MonoBehaviour
     [SerializeField] private Image _selectedIcon;
     [SerializeField] private GameObject _inventoryPanel;
     [SerializeField] private KeyCode _toggleKey = KeyCode.I;
+    [SerializeField] private GameObject _equipButton;
+
+    private ItemData _currentItem;
 
     private void Awake()
     {
@@ -49,6 +52,7 @@ public class InventoryDisplay : MonoBehaviour
         else
         {
             _descritionPanel.SetActive(false);
+            _currentItem = null;
             Cursor.lockState= CursorLockMode.Locked;
             Cursor.visible = false;
         }
@@ -64,6 +68,7 @@ public class InventoryDisplay : MonoBehaviour
     }
     public void ShowDesciption(ItemData item)
     {
+        _currentItem = item;
         _descritionPanel.SetActive(true);
         _itemNameText.text = item.ItemName;
         _itemDescriptionText.text = item.Description;
@@ -73,5 +78,38 @@ public class InventoryDisplay : MonoBehaviour
             _selectedIcon.enabled = true;
         }
         else _selectedIcon.enabled = false;
+        if (_equipButton != null) _equipButton.SetActive(item is GearData); 
+    }
+    public void EquipButton()
+    {
+        Debug.Log("[DEBUG UI] Bottone Equipaggia premuto!");
+        if (_currentItem == null)
+        {
+            Debug.LogError("[DEBUG UI] Errore: _currentItem è NULL!");
+            return;
+        } 
+        GearData gearToEquip = _currentItem as GearData;
+        if (gearToEquip == null)
+        {
+            Debug.LogError($"[DEBUG UI] Errore: {_currentItem.ItemName} NON è un GearData valido!");
+            return;
+        }
+        if (EquipmentManager.Instance == null)
+        {
+            Debug.LogError("[DEBUG UI] Errore: EquipmentManager.Instance è NULL nella scena!");
+            return;
+        }
+
+        Debug.Log($"[DEBUG UI] Invio {gearToEquip.ItemName} all'EquipmentManager...");
+
+        bool hasEquipped = EquipmentManager.Instance.EquipGear(gearToEquip);
+        if (hasEquipped)
+        {
+            InventoryManager.Instance.RemoveItem(_currentItem, 1);
+            if (UI_PlayerStats.Instance != null) UI_PlayerStats.Instance.UpdatePanelStats();
+            _descritionPanel.SetActive(false);
+            _currentItem = null;
+        }
+        else Debug.LogWarning("[DEBUG UI] EquipmentManager ha rifiutato l'oggetto (forse EquipGear ha restituito false).");
     }
 }

@@ -7,7 +7,7 @@ public class PlayerHealth : MonoBehaviour
     [Header("Components")]
     private PlayerData _playerData;
     private PlayerAnimation _playerAnim;
-
+    private float _maxHealth;
     private float _currentHealth;
     private bool _isDead = false;
     private bool _isStunned = false;
@@ -15,7 +15,8 @@ public class PlayerHealth : MonoBehaviour
     #region - Puplic Proprierties -
     public float CurrentHealth => _currentHealth;
     public bool IsStunned => _isStunned;
-    public float MaxHealth => _playerData != null ? _playerData.GetMaxHealth(_currentLevel) : 100f;
+    public float MaxHealth => _maxHealth;
+    public float BaseMaxHealth => _playerData != null ? _playerData.GetMaxHealth(_currentLevel) : 100f;
     #endregion
     #region - Life Cycle -
     private void Start()
@@ -68,13 +69,22 @@ public class PlayerHealth : MonoBehaviour
     public void Inizialize(PlayerData data)
     {
         _playerData = data;
-        _currentHealth = MaxHealth;
+        _maxHealth = BaseMaxHealth;
+        _currentHealth = _maxHealth;
     }
     public void UpdateHealthOnLevelUp(int newLevel)
     {
         _currentLevel = newLevel;
-        _currentHealth = MaxHealth;
-        Debug.Log($"PlayerHealth aggiornato al livello {_currentLevel}. Nuovi HP Massimi: {MaxHealth}");
+        //_currentHealth = MaxHealth;
+        //Debug.Log($"PlayerHealth aggiornato al livello {_currentLevel}. Nuovi HP Massimi: {MaxHealth}");
+    }
+    public void NotifyMaxHealthChanged(float finalHealth)
+    {
+        float healthDiff = finalHealth - _maxHealth;
+        _maxHealth = finalHealth;
+        if (healthDiff > 0) _currentHealth += healthDiff;
+        _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
+
     }
     #endregion
 }

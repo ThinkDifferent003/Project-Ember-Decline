@@ -45,6 +45,14 @@ public class InventoryManager : MonoBehaviour
             OnInventoryChanged?.Invoke();
         }
     }
+    public ItemData GetItemDataByID(string id)
+    {
+        foreach (ItemData item in _allItemsData)
+        {
+            if (item != null && item.ItemID == id) return item;
+        }
+        return null;
+    }
     public void PopulateSaveData(GameSaveData saveData)
     {
         foreach (InventoryItem item in _items)
@@ -62,7 +70,7 @@ public class InventoryManager : MonoBehaviour
             if (foundItem != null)
             {
                 ItemData runtimeItem = ScriptableObject.Instantiate(foundItem);
-                _items.Add(new InventoryItem(foundItem, savedItem.Count));
+                _items.Add(new InventoryItem(runtimeItem, savedItem.Count));
             }
             else Debug.LogWarning($"[InventoryManager] Errore: ID '{savedItem.ID}' non trovato nel database durante il caricamento!");
         }

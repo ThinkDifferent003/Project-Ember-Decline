@@ -61,6 +61,15 @@ public class SaveManager : MonoBehaviour
             saveData.PlayerLevel = leveling.CurrentLevel;
             saveData.PlayerCurrentXp = leveling.CurrentXp;
         }
+        if (EquipmentManager.Instance != null)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                GearData gear = EquipmentManager.Instance.GetGearSlot(i);
+                if (gear != null) saveData.EquippedGearsID[i] = gear.ItemID;
+                else saveData.EquippedGearsID[i] = "";
+            }
+        }
         string json = JsonUtility.ToJson(saveData, true);
         Debug.Log($"[DEBUG SALVATAGGIO] Stringa JSON generata:\n{json}");
         File.WriteAllText(_savePath, json);
@@ -87,6 +96,22 @@ public class SaveManager : MonoBehaviour
                 int levelToLoad = saveData.PlayerLevel > 0 ? saveData.PlayerLevel : 1;
                 leveling.LoadLevelData(levelToLoad, saveData.PlayerCurrentXp);
             }
+        }
+        if (EquipmentManager.Instance != null && saveData.EquippedGearsID != null)
+        {
+            EquipmentManager.Instance.ClearAllGears();
+            for (int i = 0; i < saveData.EquippedGearsID.Length; i++)
+            {
+                string id = saveData.EquippedGearsID[i];
+                if (string.IsNullOrEmpty(id)) continue;
+                GearData gearData = InventoryManager.Instance.GetItemDataByID(id) as GearData;
+                if (gearData != null)
+                {
+                    GearData runtimeGear = ScriptableObject.Instantiate(gearData);
+                    EquipmentManager.Instance.EquipFromSave(runtimeGear, i);
+                }
+            }
+            EquipmentManager.Instance.ApplyGearModifiers();
         }
         if (UI_PlayerStats.Instance != null) UI_PlayerStats.Instance.UpdatePanelStats();
         Debug.Log("[SaveManager] Gioco caricato con successo!");

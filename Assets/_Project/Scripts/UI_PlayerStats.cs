@@ -35,7 +35,9 @@ public class UI_PlayerStats : MonoBehaviour
     }
     private void Start()
     {
+        if (EquipmentManager.Instance != null) EquipmentManager.Instance.OnGearEquipmentChanged += UpdatePanelStats;
         if (_statsPanel != null) _statsPanel.SetActive(false);
+        UpdatePanelStats();
     }
     private void Update()
     {
@@ -44,6 +46,10 @@ public class UI_PlayerStats : MonoBehaviour
     private void OnEnable()
     {
         UpdatePanelStats();
+    }
+    private void OnDestroy()
+    {
+        if (EquipmentManager.Instance != null) EquipmentManager.Instance.OnGearEquipmentChanged -= UpdatePanelStats;
     }
     private void ToggleStatsPanel()
     {

@@ -51,6 +51,7 @@ public class PlayerLeveling : MonoBehaviour
         if (_playerHealth != null) _playerHealth.UpdateHealthOnLevelUp(_currentLevel);
         if (_playerEnergy != null) _playerEnergy.UpdateEnergyStats();
         if (_playerStamina != null) _playerStamina.UpdateStaminaStats();
+        if (EquipmentManager.Instance != null) EquipmentManager.Instance.ApplyGearModifiers();
         Debug.LogWarning($"⭐ LEVEL UP! Sei passato al Livello {_currentLevel}! ⭐");
         PrintStats();
         if (UI_PlayerStats.Instance != null) UI_PlayerStats.Instance.UpdatePanelStats();
@@ -93,6 +94,7 @@ public class PlayerLeveling : MonoBehaviour
         if (_playerHealth != null) _playerHealth.UpdateHealthOnLevelUp(_currentLevel);
         if (_playerEnergy != null) _playerEnergy.UpdateEnergyStats();
         if (_playerStamina != null) _playerStamina.UpdateStaminaStats();
+        if (EquipmentManager.Instance != null) EquipmentManager.Instance.ApplyGearModifiers();
         PrintStats();
         if (UI_PlayerStats.Instance != null) UI_PlayerStats.Instance.UpdatePanelStats();
     }
