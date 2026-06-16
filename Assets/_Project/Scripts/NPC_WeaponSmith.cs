@@ -2,31 +2,65 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPC_WeaponSmith : MonoBehaviour
+public class NPC_WeaponSmith : NPC_Manager
 {
     [SerializeField] private string _mineralID = "Mineral_Iron";
-    [SerializeField] private int _mineralCost = 1;
     [SerializeField] private int _increaseDmg = 10;
+    private PlayerWeaponHandler _cachedWeaponHandler;
 
-    public void Interact(GameObject player)
+    private void OnEnable()
     {
-        Debug.Log("[FABBRO] Salve! Porti del materiale da forgiare?");
-        PlayerWeaponHandler weaponHandler = player.GetComponent<PlayerWeaponHandler>();
-        if (weaponHandler == null || weaponHandler.GetWeaponData() == null) return;
+        DialogueManager.OnDialogueEventTriggered += HandleSmithEvents;
+    }
+    private void OnDisable()
+    {
+        DialogueManager.OnDialogueEventTriggered -= HandleSmithEvents;
+    }
+    public override void Interact(GameObject player)
+    {
+        Debug.Log("[FABBRO] Inizio interazione e passaggio dati a Ink... ");
+        _cachedWeaponHandler = player.GetComponent<PlayerWeaponHandler>();
+        if (_cachedWeaponHandler == null || _cachedWeaponHandler.GetWeaponData() == null) return;
         InventoryItem mineralItem = InventoryManager.Instance.Items.Find(i => i.Data.ItemID == _mineralID);
-        if (mineralItem != null && mineralItem.Count >= _mineralCost)
+        int minerals = mineralItem != null ? mineralItem.Count : 0;
+        int weaponLevel = _cachedWeaponHandler.GetWeaponData().Level;
+        if (weaponLevel <= 0) weaponLevel = 1;
+        DialogueManager.Instance.SetInkVariable("Minerali_Giocatore", minerals);
+        DialogueManager.Instance.SetInkVariable("Livello_Spada", weaponLevel);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        base.Interact(player);
+        
+    }
+    private void HandleSmithEvents(string eventName)
+    {
+        if (eventName.StartsWith("UpgradeSpada_"))
         {
-            InventoryManager.Instance.RemoveItem(mineralItem.Data,_mineralCost);
-            Debug.Log($"[FABBRO] Ottimo ferro! Rimossi {_mineralCost}x {_mineralID} dal tuo inventario.");
-            weaponHandler.EnhancementWeapon(_increaseDmg);
-            InventoryManager.Instance.RemoveItem(weaponHandler.GetWeaponData(), 0);
-            if (UI_PlayerStats.Instance != null) UI_PlayerStats.Instance.UpdatePanelStats();
-            Debug.Log($"[FABBRO] Ecco a te! La tua arma è diventata: {weaponHandler.GetWeaponData().ItemName}!");
+            string livelloStr = eventName.Replace("UpgradeSpada_", "");
+            int newLevel = int.Parse(livelloStr);
+            if (_cachedWeaponHandler != null)
+            {
+                _cachedWeaponHandler.EnhancementWeapon(_increaseDmg);
+                InventoryManager.Instance.RemoveItem(_cachedWeaponHandler.GetWeaponData(), 0);
+                if (UI_PlayerStats.Instance != null) UI_PlayerStats.Instance.UpdatePanelStats();
+                Debug.Log($"[FABBRO UNITY] Spada potenziata! Nuovo livello: {newLevel}. Danno aumentato di {_increaseDmg}.");
+            }
         }
-        else
+        if (eventName.StartsWith("SincronizzaMinerali_"))
         {
-            int possessed = mineralItem != null ? mineralItem.Count : 0;
-            Debug.LogWarning($"[FABBRO] Non hai abbastanza materiali! Richiesti: {_mineralCost} (Posseduti: {possessed}).");
+            string mineralStr = eventName.Replace("SincronizzaMinerali_", "");
+            int inkMineral = int.Parse(mineralStr);
+            InventoryItem mineralItem = InventoryManager.Instance.Items.Find(i => i.Data.ItemID == _mineralID);
+            if (mineralItem != null)
+            {
+                int mineralSpent = mineralItem.Count - inkMineral;
+                if (mineralSpent > 0)
+                {
+                    InventoryManager.Instance.RemoveItem(mineralItem.Data, mineralSpent);
+                    Debug.Log($"[FABBRO UNITY] Rimossi {mineralSpent}x {_mineralID} dall'inventario di Unity.");
+
+                }
+            }
         }
     }
 }

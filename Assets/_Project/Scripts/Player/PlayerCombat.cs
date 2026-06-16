@@ -36,7 +36,9 @@ public class PlayerCombat : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E)) ToggleWeapon();
+        if (Time.timeScale == 0) return;
+        if (DialogueManager.Instance != null && DialogueManager.Instance.IsDialogueActive) return;
+        if (Input.GetKeyDown(KeyCode.G)) ToggleWeapon();
         if (Input.GetMouseButtonDown(0)) TryAttack();
     }
     #endregion
@@ -100,27 +102,6 @@ public class PlayerCombat : MonoBehaviour
         else _weaponHandler.UnequipWeapon();//UnequipWeapon();
         _playerAnim?.SetWeaponEquippedState(_isWeaponEquipped, _weaponHandler.GetSpwnedWeapon());//_spawnedWeapon );
     }
-    #endregion
-    #region - Weapon Management -
-    //private void EquipWeapon()
-    //{
-    //    if (_playerAnim != null && _currentWeaponData.WeaponOverride != null)
-    //        _playerAnim.ApplyWeaponOverride(_currentWeaponData.WeaponOverride);
-
-    //    if (_spawnedWeapon == null && _currentWeaponData.WeaponPrefab != null)
-    //    {
-    //        _spawnedWeapon = Instantiate(_currentWeaponData.WeaponPrefab, _handTransform);
-    //        _spawnedWeapon.transform.localPosition = Vector3.zero;
-    //        _spawnedWeapon.transform.localRotation = Quaternion.identity;
-    //        _weaponColl = _spawnedWeapon.GetComponentInChildren<WeaponCollision>();
-    //        if (_weaponColl != null) _weaponColl.InizializeWeaponData(_currentWeaponData.Damage, _currentWeaponData.KnockbackForce);
-    //    }
-    //    else if (_spawnedWeapon != null) _spawnedWeapon.SetActive(true);
-    //}
-    //private void UnequipWeapon()
-    //{
-    //    if (_spawnedWeapon != null) _spawnedWeapon.SetActive(false);
-    //}
     #endregion
     #region - Animation Events -
     public void StartAttackCollision()

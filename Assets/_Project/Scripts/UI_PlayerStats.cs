@@ -51,6 +51,10 @@ public class UI_PlayerStats : MonoBehaviour
     {
         if (EquipmentManager.Instance != null) EquipmentManager.Instance.OnGearEquipmentChanged -= UpdatePanelStats;
     }
+    public bool IsPanelActive()
+    {
+        return _statsPanel != null && _statsPanel.activeSelf;
+    }
     private void ToggleStatsPanel()
     {
         if (_statsPanel == null) return;
@@ -58,15 +62,19 @@ public class UI_PlayerStats : MonoBehaviour
         _statsPanel.SetActive(isActive);
         if (isActive)
         {
+            if (InventoryDisplay.Instance != null) InventoryDisplay.Instance.CloseInventroyForced();
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             UpdatePanelStats();
+            Time.timeScale = 0f;
         }
         else
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             if (_weaponPanel != null) _weaponPanel.SetActive(false);
+            if (UI_GearPanelStats.Instance != null) UI_GearPanelStats.Instance.ClosePanel();
+            Time.timeScale = 1f;
         }
     }
     public void UpdatePanelStats()
@@ -94,5 +102,13 @@ public class UI_PlayerStats : MonoBehaviour
         _xpBar.maxValue = _playerLeveling.XpRequested;
         _xpBar.value = _playerLeveling.CurrentXp;
     }
-    
+    public void ClosePanelForced()
+    {
+        if (_statsPanel != null && _statsPanel.activeSelf)
+        {
+            _statsPanel.SetActive(false);
+            if (_weaponPanel != null) _weaponPanel.SetActive(false);
+            if (UI_GearPanelStats.Instance != null) UI_GearPanelStats.Instance.ClosePanel();
+        }
+    }
 }

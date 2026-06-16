@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _dashCost = 20f;
     [Header("Components")]
     [SerializeField] private PlayerLockOn _lockOn;
+    [SerializeField] private CinemachineFreeLook _cam;
     private CharacterController _controller;
     private Transform _camTransform;
     private PowersManager _powersManager;
@@ -29,6 +31,9 @@ public class PlayerMovement : MonoBehaviour
     private float _dashTimeLeft;
     private float _dashCooldownTimer;
     private float _verticalVelocity;
+    private bool _canMove = true;
+    private float _originalXSpeed;
+    private float _originalYSpeed;
     public bool IsMoving => _moveInput.magnitude > 0.1f && !_isDashing && (_playerHealth == null || !_playerHealth.IsStunned);
 
     #region - Lyfe Cycle -
@@ -39,11 +44,18 @@ public class PlayerMovement : MonoBehaviour
         _playerHealth = GetComponent<PlayerHealth>();
         _playerStamina = GetComponent<PlayerStamina>();
         if (Camera.main != null) _camTransform = Camera.main.transform;
+        if (_cam != null)
+        {
+            _originalXSpeed = _cam.m_XAxis.m_MaxSpeed;
+            _originalYSpeed = _cam.m_YAxis.m_MaxSpeed;
+        }
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
     private void Update()
     {
+        if (Time.timeScale == 0) return;
+        if (!_canMove) return;
         HandleTimers();
         HandleGravity();
         if (_playerHealth != null && _playerHealth.IsStunned)
@@ -64,6 +76,16 @@ public class PlayerMovement : MonoBehaviour
             _controller.Move(_moveVelocity * Time.deltaTime);
         }
         if (Input.GetKeyDown(KeyCode.T)) _lockOn.ToggleLock();
+    }
+    private void OnEnable()
+    {
+        DialogueManager.OnDialogueStart += BlockMove;
+        DialogueManager.OnDialogueEnd += NoBlockMove;
+    }
+    private void OnDisable()
+    {
+        DialogueManager.OnDialogueStart -= BlockMove;
+        DialogueManager.OnDialogueEnd -= NoBlockMove;
     }
     #endregion
     #region - Core Logic -
@@ -164,6 +186,26 @@ public class PlayerMovement : MonoBehaviour
         _moveVelocity = Vector3.zero;
         _moveVelocity.y = _verticalVelocity;
         _controller.Move(_moveVelocity * Time.deltaTime);
+    }
+    private void BlockMove()
+    {
+        _canMove = false;
+        _moveInput = Vector3.zero;
+        _moveVelocity = Vector3.zero;
+        if (_cam != null)
+        {
+            _cam.m_XAxis.m_MaxSpeed = 0f;
+            _cam.m_YAxis.m_MaxSpeed = 0f;
+        }
+    }
+    private void NoBlockMove()
+    {
+        _canMove = true;
+        if (_cam != null)
+        {
+            _cam.m_XAxis.m_MaxSpeed = _originalXSpeed;
+            _cam.m_YAxis.m_MaxSpeed = _originalYSpeed;
+        }
     }
     #endregion
 }

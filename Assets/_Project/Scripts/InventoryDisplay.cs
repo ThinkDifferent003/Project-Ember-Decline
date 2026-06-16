@@ -39,15 +39,21 @@ public class InventoryDisplay : MonoBehaviour
     {
         InventoryManager.OnInventoryChanged -= UpdateUI;
     }
+    public bool IsInventoryActive()
+    {
+        return _inventoryPanel != null && _inventoryPanel.activeSelf;
+    }
     public void ToggleInventory()
     {
         bool isActive = !_inventoryPanel.activeSelf;
         _inventoryPanel.SetActive(isActive);
         if (isActive)
         {
+            if (UI_PlayerStats.Instance != null && UI_PlayerStats.Instance.IsPanelActive()) UI_PlayerStats.Instance.ClosePanelForced(); 
             UpdateUI();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            Time.timeScale = 0f;
         }
         else
         {
@@ -55,6 +61,7 @@ public class InventoryDisplay : MonoBehaviour
             _currentItem = null;
             Cursor.lockState= CursorLockMode.Locked;
             Cursor.visible = false;
+            Time.timeScale = 1f;
         }
     }
     public void UpdateUI()
@@ -111,5 +118,14 @@ public class InventoryDisplay : MonoBehaviour
             _currentItem = null;
         }
         else Debug.LogWarning("[DEBUG UI] EquipmentManager ha rifiutato l'oggetto (forse EquipGear ha restituito false).");
+    }
+    public void CloseInventroyForced()
+    {
+        if (_inventoryPanel != null && _inventoryPanel.activeSelf)
+        {
+            _inventoryPanel.SetActive(false);
+            _descritionPanel.SetActive(false);
+            _currentItem = null;
+        }
     }
 }

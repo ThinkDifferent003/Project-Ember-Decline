@@ -1,0 +1,1 @@
+INCLUDE NPC_Fabbro.ink
