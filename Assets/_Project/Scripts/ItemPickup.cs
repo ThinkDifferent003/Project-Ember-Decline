@@ -9,6 +9,7 @@ public class ItemPickup : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (_itemData == null) return;
         if (other.CompareTag("Player"))
         {
             if (_itemData != null)

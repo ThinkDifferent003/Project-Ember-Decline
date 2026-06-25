@@ -24,7 +24,7 @@ public class NPC_WeaponSmith : NPC_Manager
         InventoryItem mineralItem = InventoryManager.Instance.Items.Find(i => i.Data.ItemID == _mineralID);
         int minerals = mineralItem != null ? mineralItem.Count : 0;
         int weaponLevel = _cachedWeaponHandler.GetWeaponData().Level;
-        if (weaponLevel <= 0) weaponLevel = 1;
+        //if (weaponLevel <= 0) weaponLevel = 1;
         DialogueManager.Instance.SetInkVariable("Minerali_Giocatore", minerals);
         DialogueManager.Instance.SetInkVariable("Livello_Spada", weaponLevel);
         Cursor.lockState = CursorLockMode.None;

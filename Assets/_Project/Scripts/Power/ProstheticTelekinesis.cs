@@ -20,7 +20,7 @@ public class ProstheticTelekinesis : ProstheticPower
     [SerializeField] private LayerMask _grabbyLayer;
     [SerializeField] private LineRenderer _lineRenderer;
     private Rigidbody _grabbedObj;
-
+    private Collider _jailColl;
     private Vector3 _relativeOffset;
     private bool _isStabilized = false;
 
@@ -87,6 +87,7 @@ public class ProstheticTelekinesis : ProstheticPower
         {
             EnemyLiftable enemyLift = hit.collider.GetComponent<EnemyLiftable>();
             Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
+            
             if (enemyLift != null)
             {
                 _objectWeight = enemyLift.Weight;
@@ -102,10 +103,12 @@ public class ProstheticTelekinesis : ProstheticPower
                     enemyDefensive.StopAllCoroutines();
                     enemyDefensive.SetTelekinesisDisable(true);
                 }
+               
                 _grabbedObj = rb;
                 _grabbedObj.isKinematic = true;
                 _grabbedObj.useGravity = false;
-                Vector3 liftPos = _grabbedObj.position + Vector3.up * _liftHeight;
+                Vector3 liftPos = _grabbedObj.position; //+ Vector3.up * _liftHeight;
+                //if (hit.collider.GetComponent<ItemHook>() == null) liftPos += Vector3.up * _liftHeight;
                 _relativeOffset = _playerMovement.transform.InverseTransformPoint(liftPos);
                 IsActive = true;
                 SetAnimation(true);
@@ -151,6 +154,7 @@ public class ProstheticTelekinesis : ProstheticPower
         if (ai != null) ai.enabled = true;
         if (_grabbedObj.TryGetComponent<UnityEngine.AI.NavMeshAgent>(out var agent)) agent.enabled = true;
         if (_grabbedObj.TryGetComponent<EnemyDefensive>(out EnemyDefensive enemyDefensive)) enemyDefensive.SetTelekinesisDisable(false);
+        if (_grabbedObj.TryGetComponent<TelekinesisObstacle>(out TelekinesisObstacle obstacle)) obstacle.Launch();
         _grabbedObj = null;
         IsActive = false;
         _isStabilized = false;
@@ -186,7 +190,10 @@ public class ProstheticTelekinesis : ProstheticPower
         if (_lineRenderer == null) return;
         if (!_lineRenderer.enabled) _lineRenderer.enabled = true;
         _lineRenderer.SetPosition(0, _armSource.position);
-        _lineRenderer.SetPosition(1,_grabbedObj.transform.position + Vector3.up * 1f);
+        Vector3 targetPoint = _grabbedObj.transform.position;
+        if (_grabbedObj.TryGetComponent<Collider>(out Collider col)) targetPoint = col.bounds.center;
+        //if (_grabbedObj.GetComponent<ItemHook>() != null) _lineRenderer.SetPosition(1, _grabbedObj.transform.position);
+        _lineRenderer.SetPosition(1, targetPoint);
     }
     public override void Activate()
     {
@@ -195,6 +202,17 @@ public class ProstheticTelekinesis : ProstheticPower
     public override void ForceDeactivate()
     {
         if (_isActive) Release();
+    }
+    public bool IsSearchingOrGrabbing(GameObject targetObject)
+    {
+        if (!_isActive || _grabbedObj == null) return false;
+        return _grabbedObj.gameObject == targetObject;
+    }
+    public void ResetOffset()
+    {
+        if (_grabbedObj == null) return;
+        Vector3 tergetPos = _grabbedObj.position + Vector3.up * _liftHeight;
+        _relativeOffset = _playerMovement.transform.InverseTransformPoint(tergetPos);
     }
     #endregion
 }

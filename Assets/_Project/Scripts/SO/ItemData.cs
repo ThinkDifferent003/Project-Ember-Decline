@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ItemType { Potion, Weapon , Mineral}
+public enum ItemType { Potion, Weapon , Mineral, Key}
 [CreateAssetMenu(fileName = "NewObject", menuName = "Inventory")]
 public class ItemData : ScriptableObject
 {
